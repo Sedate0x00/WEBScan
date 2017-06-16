@@ -12,7 +12,8 @@ class UrlManger(object):
         self.old_urls = set()
 
         self.bool_type = (
-            '.js', '.css', '.ico', '.jpg', '.png', '.swf', '.pdf', '.htm', '.html', '.shtml', '.jsp', '.jspx', '.java',
+            '.js', '.css', '.ico', '.jpg', '.png', '.gif', '.swf', '.pdf', '.htm', '.html', '.shtml', '.jsp', '.jspx',
+            '.java',
             '.jspy', '.do', '.action', '.asp', '.aspx', '.php', '.phpx'
         )
 

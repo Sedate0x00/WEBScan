@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Author : Sedate
 
+import sys, getopt
 import urlparse
 from threadpool import *
 
@@ -20,10 +21,10 @@ from spider import url_manager, html_downloader, html_outputer, html_parser
 
 
 class SpiderMain(object):
-    def __init__(self, hostname, proxy_pool):
+    def __init__(self, root_url, proxy_pool, threads):
         self.manager = url_manager.UrlManger()
         self.downloader = html_downloader.HtmlDownloader(proxy_pool)
-        self.parser = html_parser.HtmlParser(urlparse.urlparse(hostname).hostname)
+        self.parser = html_parser.HtmlParser(urlparse.urlparse(root_url).hostname)
         self.outputer = html_outputer.HtmlOutputer()
 
         # self.proxy_pool = proxy_pool
@@ -33,28 +34,7 @@ class SpiderMain(object):
         self.sqli = sqli_scan.SqliScan(proxy_pool)
         self.xss = xss_scan.XSSScan(proxy_pool)
 
-        self.pool = ThreadPool(30)
-
-    '''
-    # spider
-    '''
-    # def crawl(self,root_url):
-    #     root_url = self.manager.set_protocol(root_url)
-    #     self.manager.add_new_url(root_url)
-    #     hostname = urlparse.urlparse(root_url).hostname
-    #     while self.manager.has_new_url(): #判断set里是否还有url
-    #         try:
-    #             new_url = self.manager.get_new_url() # 从set里pop获取并删除一个url
-    #             print new_url
-    #             self.sqli.error_sqli(new_url) # 对url进行测试
-    #             html_count = self.downloader.download(new_url) # 请求这个url并获取响应
-    #             new_urls = self.parser.parse(new_url,html_count,hostname) # 正则取响应页面里的url
-    #             self.manager.add_new_urls(new_urls) # 把获取的url加入set里
-    #             # self.outputer.collect_data(new_data)
-    #         except:
-    #             print 'crawl : failed'
-    #
-    #     # self.outputer.output_html()
+        self.pool = ThreadPool(threads)
 
     '''
     # spider
@@ -120,16 +100,57 @@ class SpiderMain(object):
         # ......
 
 
-if __name__ == '__main__':
+def usage():
+    print 'Usage:python spider_main.py -f target.txt -t 50'
+    print '-f --file    choose file'
+    print '-t --threads threads defaults:30'
+    print '-h --help    show usage'
+    sys.exit(0)
+
+
+def main():
+    threads = 30
+
+    if not len(sys.argv[1:]):
+        usage()
+
+    # read argv
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'ht:f:', ['help', 'thread=', 'file='])
+    except getopt.GetoptError:
+        usage()
+
+    for o, a in opts:
+        if o in ('-h', '--help'):
+            usage()
+        elif o in ('-t', '--thread'):
+            try:
+                threads = int(a)
+            except:
+                print 'type error'
+                return
+        elif o in ('-f', '--file'):
+            dir = a
+        else:
+            usage()
+
     # get proxy pool
-    proxy = proxy_pool.ProxyPool()
+    proxy = proxy_pool.ProxyPool(threads)
     proxy.get_proxy_ip()
-    if len(proxy.true_ip) == 0:
+    if not len(proxy.true_ip):
         print '代理池为空'
     else:
-        file = open('target.txt', 'rb')
-        targets = file.readlines()
+        try:
+            file = open(dir, 'rb')
+            targets = file.readlines()
+        except:
+            print 'No such file or directory:%s' % dir
+            return
         for root_url in targets:
             # start spider
-            obj_spider = SpiderMain(root_url, proxy.true_ip)
+            obj_spider = SpiderMain(root_url, proxy.true_ip, threads)
             obj_spider.crawl(root_url)
+
+
+if __name__ == '__main__':
+    main()

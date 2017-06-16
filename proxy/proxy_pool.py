@@ -7,7 +7,7 @@ from threadpool import *
 
 
 class ProxyPool(object):
-    def __init__(self):
+    def __init__(self, threads):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -15,6 +15,7 @@ class ProxyPool(object):
             'Connection': 'keep-alive',
             'Accept-Encoding': 'gzip, deflate'
         }
+        self.threads = threads
         self.true_ip = []
 
     def get_proxy_ip(self):
@@ -30,7 +31,7 @@ class ProxyPool(object):
 
         print '已获取%sip\n' % len(proxy_list)
         print '测试ip可用性\n'
-        pool = ThreadPool(30)
+        pool = ThreadPool(self.threads)
         request = makeRequests(self.test_proxy_ip, proxy_list)
         [pool.putRequest(req) for req in request]
         pool.wait()

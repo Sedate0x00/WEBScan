@@ -17,10 +17,12 @@ class DirScan(object):
             resp_code = self.downloader.get_resp_code(_payload_url)
             if resp_code != None:
                 print '发现敏感目录 : %s' % _payload_url
+            else:
+                print '未发现敏感目录'
 
     def read_dir(self, dir='dir/data/dirlist.txt'):
         try:
-            print '读取目录文件\n'
+            print '读取敏感目录文件\n'
             file = open(dir, 'rb')
             _dir_list = file.readlines()
             print '敏感目录扫描'

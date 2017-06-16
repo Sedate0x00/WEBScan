@@ -2,6 +2,7 @@
 /robots.txt
 /sitemap.xml
 /crossdomain.xml
+/site-map
 /back.rar
 /back.zip
 /backup.rar
