@@ -32,7 +32,7 @@ class UrlManger(object):
     '''
 
     def add_new_urls(self, urls):
-        if urls is None or len(urls) == 0:
+        if urls is None or not len(urls):
             return
         for url in urls:
             if url not in self.old_urls:
