@@ -13,7 +13,8 @@ class DirScan(object):
 
     def dir_buster(self, dir):
         if self.url != None:
-            _payload_url = urlparse.urljoin(self.url.replace('\r\n', ''), dir.replace('\r\n', ''))
+            _payload_url = urlparse.urljoin(self.url.replace('\n', '').replace('\r', ''),
+                                            dir.replace('\n', '').replace('\r', ''))
             resp_code = self.downloader.get_resp_code(_payload_url)
             if resp_code != None:
                 print '发现敏感目录 : %s' % _payload_url
