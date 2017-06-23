@@ -78,9 +78,9 @@ class SpiderMain(object):
     '''
 
     def pentest(self, url):
-        # if 'admin' in url.lower() or 'manage' in url.lower() or 'manager' in url.lower():
-        #     print 'URL : %s' % url
-        #     print 'Find admin\'s url :%s' % url
+        if 'admin' in url.lower() or 'manage' in url.lower() or 'manager' in url.lower():
+            print 'URL : %s' % url
+            print 'Find admin\'s url :%s' % url
 
         bool = self.manager.bool_url_type(url)
         if bool == None:
@@ -146,6 +146,8 @@ def main():
         except:
             print 'No such file or directory:%s' % dir
             return
+        finally:
+            file.close()
         for root_url in targets:
             # start spider
             obj_spider = SpiderMain(root_url, proxy.true_ip, threads)
