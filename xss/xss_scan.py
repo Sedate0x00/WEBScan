@@ -17,11 +17,11 @@ class XSSScan(object):
             elif bool == 2:
                 _payload_urls = self.manager.route_get_url(url, payload)
 
-            if _payload_urls != None:
+            if _payload_urls:
                 for _payload_url in _payload_urls:
                     _html_count = self.downloader.download(_payload_url)
 
-                    if _html_count != None:
+                    if _html_count:
                         if payload in _html_count:
                             print 'URL : %s' % _payload_url
                             print 'Find XSS\nPayload :%s\n' % (payload)

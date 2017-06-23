@@ -12,11 +12,11 @@ class DirScan(object):
         self.url = url
 
     def dir_buster(self, dir):
-        if self.url != None:
+        if self.url:
             _payload_url = urlparse.urljoin(self.url.replace('\n', '').replace('\r', ''),
                                             dir.replace('\n', '').replace('\r', ''))
             resp_code = self.downloader.get_resp_code(_payload_url)
-            if resp_code != None:
+            if resp_code:
                 print '发现敏感目录 : %s' % _payload_url
 
     def read_dir(self, dir='dir/data/dirlist.txt'):
@@ -30,5 +30,7 @@ class DirScan(object):
             print e
             print 'dir read error'
             return None
+        finally:
+            file.close()
 
 # DirScan().read_dir()
