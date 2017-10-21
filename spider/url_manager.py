@@ -111,8 +111,8 @@ class UrlManger(object):
         payload_urls = []
         temp_url = ''
 
-        for i in range(0, len(u)):
-            for j in range(0, len(u)):
+        for i in range(len(u)):
+            for j in range(len(u)):
                 if j == i:
                     temp_url = temp_url + '&' + u[j] + urllib.quote(payload)
                 else:
